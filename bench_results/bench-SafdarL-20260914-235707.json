@@ -1,0 +1,87 @@
+{
+ "host": "SafdarL",
+ "created": "2026-09-14T23:57:07",
+ "cpu": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+ "logical_cpus": 8,
+ "python": "3.12.10",
+ "mediapipe": "1.0.1",
+ "opencv": "5.0.0",
+ "args": {
+  "camera": 0,
+  "backend": "msmf",
+  "width": 640,
+  "height": 480,
+  "fps": 30,
+  "mjpg": false,
+  "process_width": 640,
+  "invert_handedness": false,
+  "no_face": false,
+  "active_fps": 30.0,
+  "idle_fps": 8.0,
+  "measure": null
+ },
+ "camera": {
+  "backend": "MSMF",
+  "width": 640,
+  "height": 480,
+  "fps": 30.0
+ },
+ "preview_window": true,
+ "summary": {
+  "idle": {
+   "seconds": 3,
+   "cpu_pct_median": 5.8,
+   "cpu_pct_p95": 9.4,
+   "cpu_budget_pct": 5.0,
+   "within_budget": false,
+   "infer_fps_mean": 6.6,
+   "cam_fps_mean": 32.9,
+   "hand_ms_p50": 43.5,
+   "hand_ms_p95": 66.5,
+   "face_ms_p50": 6.9,
+   "read_to_features_ms_p50": 47.0,
+   "read_to_features_ms_p95": 63.0
+  },
+  "stalled_seconds": 0
+ },
+ "camera_users": [
+  {
+   "t": 0.3,
+   "apps": [
+    "C:\\Users\\safda\\AppData\\Local\\Discord\\app-1.0.9255\\Discord.exe"
+   ]
+  }
+ ],
+ "capture_events": [
+  {
+   "t": 0.0,
+   "msg": "opened camera 0 via MSMF: 640x480 @ 30"
+  }
+ ],
+ "seconds": [
+  {
+   "t": 1.1,
+   "mode": "idle",
+   "cpu_pct": 5.81,
+   "infer_fps": 5.4,
+   "cam_fps": 35.1,
+   "frame_age_ms": 16
+  },
+  {
+   "t": 2.2,
+   "mode": "idle",
+   "cpu_pct": 4.75,
+   "infer_fps": 7.2,
+   "cam_fps": 34.2,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 3.3,
+   "mode": "idle",
+   "cpu_pct": 9.82,
+   "infer_fps": 7.3,
+   "cam_fps": 29.3,
+   "frame_age_ms": 16
+  }
+ ]
+}
