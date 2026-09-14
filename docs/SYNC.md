@@ -9,6 +9,78 @@ Answer a request in a new entry rather than editing old ones.
 
 ---
 
+## 2026-09-15 · PC → laptop
+
+Thanks, everything arrived. Here's what the data shows.
+
+**Fine:**
+- **CPU** is within budget: idle 4.2%, active 13.8%.
+- **The camera** delivers a steady 30 fps.
+- **Counts 1–4, palm and fist** read correctly in 99–100% of frames, with wide
+  margins.
+- **Handedness** is confirmed.
+
+**Found and fixed (in this push):**
+- **Pinch was broken.** The held-pinch recording read as pinch in only 17% of frames,
+  because world-landmark depth is too noisy: a steady pinch measured anywhere from
+  0.21 to 0.72. Pinch now uses the image-plane distance, which holds at 0.17–0.24.
+  Because a fist also brings the thumb and index tips together, a pinch additionally
+  needs the index finger not folded (fist 0.46–0.50, pinch 0.73–0.84). The recording
+  now reads 100% pinch.
+- **Thumb threshold.** The folded-thumb threshold (`thumb_in`) moved from 0.60 to 0.65,
+  sitting between real counts (≤ 0.57) and palms (≥ 0.75).
+- **The "passive Discord handle" is a stale registry entry,** left by the *old* Discord
+  version folder `app-1.0.9255`. The version in use, `app-1.0.9257`, appeared and
+  disappeared correctly during your runs. The camera guard now ignores entries whose
+  app isn't running.
+- **Stillness gate.** Simulating the engage and launcher holds on your recordings:
+  without a stillness gate, `pass-through` would have armed the system twice. With the
+  hand-speed limit at 0.25 frame-widths per second: zero false fires, and every static
+  pose still fires once. Phase 1 will use that value.
+- **Regression tests.** `tests/test_recordings.py` now runs the real recordings on every
+  test run.
+
+**Still open:**
+- **Throughput.** Active inference ran at 19.5 fps, not 30. The hand model takes 49.5 ms
+  per frame with a hand in view and 25.7 ms on empty frames. My guess: with
+  `num_hands=2`, MediaPipe keeps searching for a second hand on every frame. See
+  test 3.
+- **Camera sharing.** It's exclusive, so gestures and Discord video can't share the
+  camera. How to hand it over is a decision for the owner, which I'm asking them
+  about directly.
+- **`left-count2`** reads as **count1** in 100% of frames: the middle finger is folded
+  throughout. Either the pose was one finger, or MediaPipe misreads it.
+
+**Laptop, please:**
+1. **Pull**, then run `py -3.12 -m uv run pytest`. It should be all green.
+2. **Windows camera setting.** Open **Settings → Bluetooth & devices → Cameras →** the
+   built-in camera. Is there an option to let several apps use the camera at once? If
+   there is, turn it on and repeat Discord runs A and B (msmf). Report what you saw.
+3. **Throughput runs**, 90 s each. For runs a–c keep **one** hand in view the whole
+   time. For run d keep **both** hands in view.
+   - a. `py -3.12 -m uv run python tools/bench.py --measure 90`
+   - b. `... --measure 90 --num-hands 1`
+   - c. `... --measure 90 --delegate gpu`. It may fail on Windows; if so, report the
+     error text.
+   - d. `... --measure 90` (both hands)
+4. **Microphone signal.** With Discord open but **not** in a call, run:
+   `py -3.12 -m uv run python -c "from gestureio.coordinator.camera_guard import microphone_users, webcam_users; print('mic', microphone_users()); print('cam', webcam_users())"`
+   Then run it again **during** a Discord voice call with video off. Report both
+   outputs.
+5. **Recordings:**
+   - `left-count2`, with index and middle up and the thumb tucked. Also `git rm` the
+     old `left-count2` recording.
+   - `right-pinch-taps`: pinch and release about once a second.
+   - `right-pinch-turn`: hold a pinch and turn the hand like a volume knob, both ways,
+     several times.
+   - `right-pinch-flick`: pinch, flick the wrist left, right, up or down, then release.
+     Repeat.
+6. **Push** the reports, recordings and a new entry here with answers to 2–4.
+
+**PC next:** the Phase 0 verdict, then Phase 1 (the launcher, end to end).
+
+---
+
 ## 2026-09-15 · laptop → PC
 
 Answers to the 2026-09-14 requests, in order.

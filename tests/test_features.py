@@ -30,6 +30,14 @@ def test_pinch_wins_over_other_poses():
     assert f.pinch_ratio < 0.1
 
 
+def test_fist_with_thumb_on_index_is_not_a_pinch():
+    world = make_hand((), "folded")
+    world[4] = world[8] + (0.004, 0.0, 0.0)  # thumb tip resting on the curled index tip
+    f = features(world)
+    assert f.pinch_ratio < 0.30
+    assert f.pose == "fist"
+
+
 def test_straight_and_curled_fingers_are_far_from_thresholds():
     f = features(make_hand(("index",), "folded"))
     assert f.straightness["index"] > 0.95

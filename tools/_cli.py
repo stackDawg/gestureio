@@ -7,6 +7,10 @@ import argparse
 from gestureio.coordinator.capture import BACKENDS, Capture
 from gestureio.coordinator.pipeline import Pipeline
 
+# What opening the camera and loading the models can raise; the tools report these
+# as one-line errors instead of tracebacks.
+SETUP_ERRORS = (OSError, RuntimeError, ValueError)
+
 
 def add_camera_args(parser: argparse.ArgumentParser) -> None:
     g = parser.add_argument_group("camera")
@@ -22,6 +26,10 @@ def add_camera_args(parser: argparse.ArgumentParser) -> None:
     g.add_argument("--invert-handedness", action="store_true",
                    help="swap Left/Right labels (only if the first-run check shows them inverted)")
     g.add_argument("--no-face", action="store_true", help="skip face detection")
+    g.add_argument("--num-hands", type=int, choices=(1, 2), default=2,
+                   help="hands to track; 1 skips searching for a second hand every frame")
+    g.add_argument("--delegate", choices=("cpu", "gpu"), default="cpu",
+                   help="where the hand model runs (default cpu)")
 
 
 def open_pipeline(args: argparse.Namespace, active_fps: float = 30.0,
@@ -29,7 +37,8 @@ def open_pipeline(args: argparse.Namespace, active_fps: float = 30.0,
     # Imported here so --help works even before the models are downloaded.
     from gestureio.coordinator.tracker import FaceTracker, HandTracker
 
-    hands = HandTracker(invert_handedness=args.invert_handedness)
+    hands = HandTracker(num_hands=args.num_hands, invert_handedness=args.invert_handedness,
+                        delegate=args.delegate)
     faces = None if args.no_face else FaceTracker()
     capture = Capture(args.camera, args.width, args.height, args.fps, args.backend, args.mjpg)
     capture.start()

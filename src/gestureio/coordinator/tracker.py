@@ -26,6 +26,7 @@ from gestureio.coordinator.types import TrackedFace, TrackedHand
 
 HAND_MODEL = MODELS_DIR / "hand_landmarker.task"
 FACE_MODEL = MODELS_DIR / "blaze_face_short_range.tflite"
+DELEGATES = {"cpu": mp_python.BaseOptions.Delegate.CPU, "gpu": mp_python.BaseOptions.Delegate.GPU}
 _SWAP = {"Left": "Right", "Right": "Left"}
 # The handedness convention below was measured on this version. After upgrading
 # MediaPipe, redo the bench right/left check before changing this.
@@ -41,10 +42,10 @@ def user_hand(raw_label: str, invert: bool = False) -> str:
     return _SWAP.get(label, label) if invert else label
 
 
-def _base_options(path: Path) -> mp_python.BaseOptions:
+def _base_options(path: Path, delegate: str = "cpu") -> mp_python.BaseOptions:
     if not path.exists():
         raise FileNotFoundError(f"{path} is missing; run: uv run python tools/fetch_models.py")
-    return mp_python.BaseOptions(model_asset_path=str(path))
+    return mp_python.BaseOptions(model_asset_path=str(path), delegate=DELEGATES[delegate])
 
 
 class _VideoClock:
@@ -60,9 +61,10 @@ class _VideoClock:
 
 class HandTracker:
     def __init__(self, num_hands: int = 2, min_detection: float = 0.5, min_presence: float = 0.5,
-                 min_tracking: float = 0.5, invert_handedness: bool = False):
+                 min_tracking: float = 0.5, invert_handedness: bool = False,
+                 delegate: str = "cpu"):
         options = vision.HandLandmarkerOptions(
-            base_options=_base_options(HAND_MODEL),
+            base_options=_base_options(HAND_MODEL, delegate),
             running_mode=vision.RunningMode.VIDEO,
             num_hands=num_hands,
             min_hand_detection_confidence=min_detection,

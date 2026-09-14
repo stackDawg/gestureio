@@ -1,10 +1,11 @@
 """Geometric features of one tracked hand.
 
-Pose features (finger straightness, thumb position, pinch) use MediaPipe's world
-landmarks. Those are metric and centred on the hand, so they don't change with
-distance from the camera or with hand rotation. Position and angle features use
-image landmarks converted to pixels, because normalised x and y have different
-units on a non-square frame.
+Finger straightness and thumb position use MediaPipe's world landmarks. Those are
+metric and centred on the hand, so they don't change with distance from the
+camera or with hand rotation. Pinch, position and angle use image landmarks
+converted to pixels: in the laptop recordings, world-landmark depth was too noisy
+for pinch (a held pinch read anywhere from 0.21 to 0.72), while the image-plane
+ratio stayed at 0.17-0.24.
 """
 
 from __future__ import annotations
@@ -37,15 +38,20 @@ EXT, MID, FOLD = "ext", "mid", "fold"
 class PoseThresholds:
     finger_ext: float = 0.85  # straightness at or above this: extended
     finger_fold: float = 0.70  # at or below this: folded; in between: ambiguous
-    thumb_out: float = 0.75  # thumb tip to middle MCP, over palm length
-    thumb_in: float = 0.60
-    pinch_on: float = 0.25  # thumb tip to index tip, over palm length
-    pinch_off: float = 0.40  # used by the arbiter's hysteresis, not here
+    # Thumb tip to middle MCP, over palm length. Recorded counts: 0.41-0.57; palms: 0.75+.
+    thumb_out: float = 0.75
+    thumb_in: float = 0.65
+    # Thumb tip to index tip over palm length, in the image plane. Held pinch: 0.17-0.24.
+    pinch_on: float = 0.30
+    pinch_off: float = 0.45  # used by the arbiter's hysteresis, not here
+    # A fist also brings thumb and index tips together; its index is folded (0.46-0.50),
+    # a pinching index is not (0.73-0.84).
+    pinch_index_min: float = 0.62
 
 
 @dataclass(frozen=True)
 class HandFeatures:
-    handedness: str  # "Left" or "Right": the user's real hand, because input is mirrored
+    handedness: str  # "Left" or "Right": the user's real hand
     handedness_score: float
     straightness: dict[str, float]
     fingers: dict[str, str]  # EXT / MID / FOLD per non-thumb finger
@@ -79,9 +85,9 @@ def _tristate(value: float, high: float, low: float) -> str:
     return MID
 
 
-def classify_pose(fingers: dict[str, str], thumb: str, pinch_ratio: float,
-                  th: PoseThresholds) -> str:
-    if pinch_ratio < th.pinch_on:
+def classify_pose(fingers: dict[str, str], straight: dict[str, float], thumb: str,
+                  pinch_ratio: float, th: PoseThresholds) -> str:
+    if pinch_ratio < th.pinch_on and straight["index"] >= th.pinch_index_min:
         return "pinch"
     states = list(fingers.values())
     # An ambiguous finger makes every count and pose unreliable, so refuse to guess.
@@ -123,7 +129,8 @@ def hand_features(image_lm: np.ndarray, world_lm: np.ndarray | None, handedness:
     fingers = {name: _tristate(v, th.finger_ext, th.finger_fold) for name, v in straight.items()}
     thumb_ratio = float(np.linalg.norm(pose_pts[THUMB_TIP] - pose_pts[MIDDLE_MCP])) / palm
     thumb = _tristate(thumb_ratio, th.thumb_out, th.thumb_in)
-    pinch_ratio = float(np.linalg.norm(pose_pts[THUMB_TIP] - pose_pts[INDEX_TIP])) / palm
+    palm_px = max(float(np.linalg.norm(px[MIDDLE_MCP] - px[WRIST])), 1e-9)
+    pinch_ratio = float(np.linalg.norm(px[THUMB_TIP] - px[INDEX_TIP])) / palm_px
 
     d = px[PINKY_MCP] - px[INDEX_MCP]
     knuckle_deg = math.degrees(math.atan2(d[1], d[0]))
@@ -138,7 +145,7 @@ def hand_features(image_lm: np.ndarray, world_lm: np.ndarray | None, handedness:
         thumb_ratio=thumb_ratio,
         thumb=thumb,
         pinch_ratio=pinch_ratio,
-        pose=classify_pose(fingers, thumb, pinch_ratio, th),
+        pose=classify_pose(fingers, straight, thumb, pinch_ratio, th),
         knuckle_deg=knuckle_deg,
         center=(float(cx), float(cy)),
         bbox_area=float(span[0] * span[1]),

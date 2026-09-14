@@ -257,7 +257,7 @@ def main() -> int:
 
     try:
         pipeline = _cli.open_pipeline(args, args.active_fps, args.idle_fps)
-    except (CameraError, FileNotFoundError) as exc:
+    except (CameraError, *_cli.SETUP_ERRORS) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
     stats, watch = Stats(), CameraWatch()

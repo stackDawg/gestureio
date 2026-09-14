@@ -86,8 +86,14 @@ LAPTOP (SafdarL)                                       PC (Safdar)
   a hand appears. Face detection runs at 2 fps regardless.
 - **Camera guard:** every 2 s it polls
   `HKCU\...\CapabilityAccessManager\ConsentStore\webcam` for any *other* app with
-  `LastUsedTimeStop == 0`. If it finds one, it releases the camera, turns the indicator
-  amber ("paused: camera in use"), and resumes when that app lets go.
+  `LastUsedTimeStop == 0`. It ignores entries whose app isn't running, because apps
+  that crash or update mid-session stay listed forever. If it finds one, it releases
+  the camera, turns the indicator amber ("paused: camera in use"), and resumes when
+  that app lets go.
+  - *Phase 0 finding:* the laptop camera is exclusive. Whichever app opens it first
+    keeps it, on both capture backends, and Discord's failed attempt leaves no trace.
+    So the guard can't react to Discord *wanting* the camera. How to hand the camera
+    over is an open decision, tracked in `docs/SYNC.md`.
 - **Handedness correctness.** Frames are mirrored once at capture, before inference.
   *Correction from the 2026-09-14 laptop bench:* MediaPipe's docs say its label
   assumes mirrored input, but on mediapipe 1.0.1 mirrored frames come back labelled
@@ -103,8 +109,10 @@ LAPTOP (SafdarL)                                       PC (Safdar)
 
 ### 4.1 Decision: disambiguation by first motion, then foreground context
 
-One **pinch** (thumb tip to index tip, normalised by hand size, with hysteresis: on
-below 0.25, off above 0.40) is the *grab* primitive. Its meaning comes from **what the
+One **pinch** is the *grab* primitive. It is thumb tip to index tip in the image
+plane, over palm length, with hysteresis: on below 0.30, off above 0.45. The index
+finger must also not be folded, which is what separates a pinch from a fist. These
+values were tuned on the 2026-09-15 laptop recordings. Its meaning comes from **what the
 pinched hand does first**, inside a **350 ms disambiguation window**. The first
 threshold crossed wins, and that mode stays locked until you release:
 

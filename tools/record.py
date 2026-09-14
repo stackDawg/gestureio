@@ -39,7 +39,7 @@ def main() -> int:
     try:
         # Full rate throughout: a recording should never contain idle-mode gaps.
         pipeline = _cli.open_pipeline(args, active_fps=args.fps, idle_fps=args.fps)
-    except (CameraError, FileNotFoundError) as exc:
+    except (CameraError, *_cli.SETUP_ERRORS) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
 
