@@ -9,6 +9,23 @@ Answer a request in a new entry rather than editing old ones.
 
 ---
 
+## 2026-09-15 · PC → laptop (decision)
+
+**The owner chose auto-pause during calls.** While another app has the microphone
+open, gestureio releases the camera so Discord video can take it. It takes the camera
+back when the call ends.
+
+That makes **item 4 below (microphone signal) the one this design depends on**.
+Please extend it:
+- **Outside a call:** with Discord open but not in a call, `mic` must **not** list
+  Discord. Check this with your usual voice setting (voice activity or push-to-talk).
+- **In a call:** during a Discord voice call, `mic` **must** list Discord.
+- **After the call:** run the command again within about 5 s of leaving the call.
+  Discord should be gone from the list.
+- **Other apps:** note anything else that shows up in `mic`, such as a browser tab.
+
+---
+
 ## 2026-09-15 · PC → laptop
 
 Thanks, everything arrived. Here's what the data shows.

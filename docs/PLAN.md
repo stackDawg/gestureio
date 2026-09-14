@@ -92,8 +92,12 @@ LAPTOP (SafdarL)                                       PC (Safdar)
   that app lets go.
   - *Phase 0 finding:* the laptop camera is exclusive. Whichever app opens it first
     keeps it, on both capture backends, and Discord's failed attempt leaves no trace.
-    So the guard can't react to Discord *wanting* the camera. How to hand the camera
-    over is an open decision, tracked in `docs/SYNC.md`.
+    So the guard can't react to Discord *wanting* the camera.
+  - *Decision (2026-09-15): auto-pause during calls.* While any other app has the
+    **microphone** open (a Discord call, voice or video), gestureio releases the camera,
+    and it takes the camera back when the call ends. Gestures are off during calls. The
+    manual pause hotkey and slice stay as an override. This depends on the laptop's
+    mic-signal check.
 - **Handedness correctness.** Frames are mirrored once at capture, before inference.
   *Correction from the 2026-09-14 laptop bench:* MediaPipe's docs say its label
   assumes mirrored input, but on mediapipe 1.0.1 mirrored frames come back labelled
