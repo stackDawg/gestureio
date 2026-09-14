@@ -9,6 +9,64 @@ Answer a request in a new entry rather than editing old ones.
 
 ---
 
+## 2026-09-15 · laptop → PC (2)
+
+Answers to both 2026-09-15 requests, in order.
+
+1. **Pulled, pytest green:** 57 passed.
+2. **Camera setting:** the built-in camera did have a "let several apps use this
+   camera at once" toggle, off by default. Turned it on and repeated runs A and B
+   (msmf):
+   - **A':** bench first, then Discord. Both showed video, bench kept moving,
+     other apps using camera: `discord.exe`.
+   - **B':** Discord first, then bench. Same result — both worked, other apps
+     using camera: `discord.exe`.
+
+   So the OS-level setting fixes exclusivity entirely; order no longer matters.
+   One side effect: the camera negotiated 1280x720 instead of 640x480 once
+   sharing was on (still downscaled to `--process-width` before inference).
+3. **Throughput runs**, 90 s each:
+
+   | Run | Config | Active cpu median (p95) | Inference fps | Hand model p50 / p95 |
+   |---|---|---|---|---|
+   | a | num_hands=2, 1 real hand | 16.2% (19.9%) | 17.1 | 51.7 / 75.8 ms |
+   | b | **num_hands=1**, 1 real hand | 12.7% (14.8%) | 28.6 | 22.1 / 24.8 ms |
+   | c | delegate=gpu | failed to start (see error below) | | |
+   | d | num_hands=2, 2 real hands | 16.5% (18.6%) | 19.8 | 47.2 / 53.1 ms |
+
+   Confirms your throughput guess: runs a and d are nearly identical even though
+   d has twice the real hands, because `num_hands=2` always pays the
+   second-hand-search cost. `num_hands=1` almost doubles fps and halves hand
+   model latency.
+
+   Run c error:
+   ```
+   error: ValidatedGraphConfig Initialization failed.
+   ImageCloneCalculator: GPU processing is disabled in build flags
+   ```
+   GPU delegate isn't available in this MediaPipe build on Windows.
+4. **Microphone signal**, plus the auto-pause decision's extra checks:
+   - Outside a call (Discord open, not in a call): `mic []`, `cam []`.
+   - During a call (video off): `mic [...Discord.exe]`, `cam []`.
+   - Within ~5 s of leaving the call: `mic []`, `cam []` again.
+   - No other app (browser or otherwise) showed up in `mic` at any point.
+
+   So the mic signal cleanly distinguishes "Discord open" from "Discord in a
+   call," and clears quickly after the call ends. Looks solid for the auto-pause
+   design.
+5. **Recordings:**
+   - `left-count2` re-recorded (old one `git rm`'d). First attempt at the redo
+     also came out wrong — it read mostly as **Right** (112 frames) with only
+     48 as Left, meaning the other hand ended up in frame too. Redone a second
+     time with only the left hand in view: 100% frames, all Left.
+   - `right-pinch-taps`, `right-pinch-turn`, `right-pinch-flick` recorded:
+     89%, 75%, and 100% frames with a hand respectively, all Right. The lower
+     rate on `-turn` is likely motion blur/self-occlusion while rotating.
+
+All 5 new bench reports, the corrected recordings, and this entry are pushed.
+
+---
+
 ## 2026-09-15 · PC → laptop (decision)
 
 **The owner chose auto-pause during calls.** While another app has the microphone

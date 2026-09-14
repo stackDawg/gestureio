@@ -1,0 +1,335 @@
+{
+ "host": "SafdarL",
+ "created": "2026-09-15T00:32:54",
+ "cpu": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+ "logical_cpus": 8,
+ "python": "3.12.10",
+ "mediapipe": "1.0.1",
+ "opencv": "5.0.0",
+ "args": {
+  "camera": 0,
+  "backend": "msmf",
+  "width": 640,
+  "height": 480,
+  "fps": 30,
+  "mjpg": false,
+  "process_width": 640,
+  "invert_handedness": false,
+  "no_face": false,
+  "num_hands": 2,
+  "delegate": "cpu",
+  "active_fps": 30.0,
+  "idle_fps": 8.0,
+  "measure": null
+ },
+ "camera": {
+  "backend": "MSMF",
+  "width": 1280,
+  "height": 720,
+  "fps": 30.0
+ },
+ "preview_window": true,
+ "summary": {
+  "idle": {
+   "seconds": 27,
+   "cpu_pct_median": 6.2,
+   "cpu_pct_p95": 9.5,
+   "cpu_budget_pct": 5.0,
+   "within_budget": false,
+   "infer_fps_mean": 7.8,
+   "cam_fps_mean": 32.6,
+   "hand_ms_p50": 28.0,
+   "hand_ms_p95": 57.0,
+   "face_ms_p50": 5.1,
+   "read_to_features_ms_p50": 31.0,
+   "read_to_features_ms_p95": 62.9
+  },
+  "active": {
+   "seconds": 5,
+   "cpu_pct_median": 14.4,
+   "cpu_pct_p95": 14.9,
+   "cpu_budget_pct": 20.0,
+   "within_budget": true,
+   "infer_fps_mean": 16.6,
+   "cam_fps_mean": 30.6,
+   "hand_ms_p50": 47.0,
+   "hand_ms_p95": 57.9,
+   "face_ms_p50": 5.1,
+   "read_to_features_ms_p50": 62.0,
+   "read_to_features_ms_p95": 93.6
+  },
+  "stalled_seconds": 0
+ },
+ "camera_users": [
+  {
+   "t": 0.2,
+   "apps": [
+    "C:\\Users\\safda\\AppData\\Local\\Discord\\app-1.0.9257\\Discord.exe"
+   ]
+  }
+ ],
+ "capture_events": [
+  {
+   "t": 0.0,
+   "msg": "opened camera 0 via MSMF: 1280x720 @ 30"
+  }
+ ],
+ "seconds": [
+  {
+   "t": 1.1,
+   "mode": "idle",
+   "cpu_pct": 8.82,
+   "infer_fps": 6.6,
+   "cam_fps": 32.9,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 2.1,
+   "mode": "idle",
+   "cpu_pct": 5.33,
+   "infer_fps": 7.5,
+   "cam_fps": 30.4,
+   "frame_age_ms": 16
+  },
+  {
+   "t": 3.2,
+   "mode": "idle",
+   "cpu_pct": 6.89,
+   "infer_fps": 7.4,
+   "cam_fps": 34.6,
+   "frame_age_ms": 16
+  },
+  {
+   "t": 4.3,
+   "mode": "idle",
+   "cpu_pct": 5.61,
+   "infer_fps": 7.4,
+   "cam_fps": 32.0,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 5.4,
+   "mode": "idle",
+   "cpu_pct": 7.67,
+   "infer_fps": 7.3,
+   "cam_fps": 36.1,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 6.4,
+   "mode": "idle",
+   "cpu_pct": 8.46,
+   "infer_fps": 7.9,
+   "cam_fps": 31.1,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 7.5,
+   "mode": "idle",
+   "cpu_pct": 6.8,
+   "infer_fps": 7.5,
+   "cam_fps": 30.2,
+   "frame_age_ms": 16
+  },
+  {
+   "t": 8.5,
+   "mode": "idle",
+   "cpu_pct": 6.53,
+   "infer_fps": 7.4,
+   "cam_fps": 31.0,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 9.5,
+   "mode": "idle",
+   "cpu_pct": 4.61,
+   "infer_fps": 7.9,
+   "cam_fps": 31.1,
+   "frame_age_ms": 32
+  },
+  {
+   "t": 10.6,
+   "mode": "idle",
+   "cpu_pct": 3.8,
+   "infer_fps": 7.4,
+   "cam_fps": 35.8,
+   "frame_age_ms": 16
+  },
+  {
+   "t": 11.7,
+   "mode": "idle",
+   "cpu_pct": 4.22,
+   "infer_fps": 7.5,
+   "cam_fps": 32.8,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 12.8,
+   "mode": "idle",
+   "cpu_pct": 7.9,
+   "infer_fps": 7.5,
+   "cam_fps": 34.0,
+   "frame_age_ms": 16
+  },
+  {
+   "t": 13.8,
+   "mode": "idle",
+   "cpu_pct": 6.8,
+   "infer_fps": 7.5,
+   "cam_fps": 30.4,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 14.9,
+   "mode": "idle",
+   "cpu_pct": 4.1,
+   "infer_fps": 7.6,
+   "cam_fps": 33.5,
+   "frame_age_ms": 15
+  },
+  {
+   "t": 15.9,
+   "mode": "active",
+   "cpu_pct": 10.76,
+   "infer_fps": 8.9,
+   "cam_fps": 31.3,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 16.9,
+   "mode": "active",
+   "cpu_pct": 14.59,
+   "infer_fps": 15.5,
+   "cam_fps": 29.1,
+   "frame_age_ms": 16
+  },
+  {
+   "t": 17.9,
+   "mode": "active",
+   "cpu_pct": 14.41,
+   "infer_fps": 14.8,
+   "cam_fps": 30.0,
+   "frame_age_ms": 32
+  },
+  {
+   "t": 18.9,
+   "mode": "active",
+   "cpu_pct": 14.45,
+   "infer_fps": 19.0,
+   "cam_fps": 30.8,
+   "frame_age_ms": 32
+  },
+  {
+   "t": 19.9,
+   "mode": "active",
+   "cpu_pct": 15.01,
+   "infer_fps": 24.6,
+   "cam_fps": 31.9,
+   "frame_age_ms": 15
+  },
+  {
+   "t": 21.0,
+   "mode": "idle",
+   "cpu_pct": 9.79,
+   "infer_fps": 15.8,
+   "cam_fps": 31.1,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 22.1,
+   "mode": "idle",
+   "cpu_pct": 8.03,
+   "infer_fps": 7.6,
+   "cam_fps": 31.5,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 23.1,
+   "mode": "idle",
+   "cpu_pct": 7.79,
+   "infer_fps": 7.4,
+   "cam_fps": 31.0,
+   "frame_age_ms": 0
+  },
+  {
+   "t": 24.2,
+   "mode": "idle",
+   "cpu_pct": 6.15,
+   "infer_fps": 7.4,
+   "cam_fps": 32.0,
+   "frame_age_ms": 32
+  },
+  {
+   "t": 25.3,
+   "mode": "idle",
+   "cpu_pct": 6.89,
+   "infer_fps": 7.4,
+   "cam_fps": 33.2,
+   "frame_age_ms": 0
+  },
+  {
+   "t": 26.4,
+   "mode": "idle",
+   "cpu_pct": 4.35,
+   "infer_fps": 7.4,
+   "cam_fps": 30.9,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 27.5,
+   "mode": "idle",
+   "cpu_pct": 5.17,
+   "infer_fps": 7.3,
+   "cam_fps": 32.4,
+   "frame_age_ms": 32
+  },
+  {
+   "t": 28.5,
+   "mode": "idle",
+   "cpu_pct": 3.31,
+   "infer_fps": 7.5,
+   "cam_fps": 32.2,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 29.6,
+   "mode": "idle",
+   "cpu_pct": 6.16,
+   "infer_fps": 7.4,
+   "cam_fps": 31.0,
+   "frame_age_ms": 31
+  },
+  {
+   "t": 30.6,
+   "mode": "idle",
+   "cpu_pct": 4.42,
+   "infer_fps": 7.9,
+   "cam_fps": 36.6,
+   "frame_age_ms": 16
+  },
+  {
+   "t": 31.7,
+   "mode": "idle",
+   "cpu_pct": 3.99,
+   "infer_fps": 7.4,
+   "cam_fps": 35.0,
+   "frame_age_ms": 0
+  },
+  {
+   "t": 32.8,
+   "mode": "idle",
+   "cpu_pct": 4.4,
+   "infer_fps": 7.2,
+   "cam_fps": 34.8,
+   "frame_age_ms": 0
+  },
+  {
+   "t": 33.8,
+   "mode": "idle",
+   "cpu_pct": 10.0,
+   "infer_fps": 7.9,
+   "cam_fps": 33.0,
+   "frame_age_ms": 0
+  }
+ ]
+}
