@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.part
+
+# Downloaded by tools/fetch_models.py
+models/
+
+# bench_results/ and recordings/ are committed on purpose: they are how the
+# laptop's camera results reach the PC. Landmarks and stats only, never images.

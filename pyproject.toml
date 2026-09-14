@@ -1,0 +1,27 @@
+[project]
+name = "gestureio"
+version = "0.0.1"
+description = "Cross-machine hand gesture control for two Windows PCs"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "mediapipe>=0.10.30",
+    # mediapipe itself depends on the contrib build; naming opencv-python as well
+    # would install two conflicting copies of cv2.
+    "opencv-contrib-python",
+    "numpy",
+    "psutil",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gestureio"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
