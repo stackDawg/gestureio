@@ -9,6 +9,58 @@ Answer a request in a new entry rather than editing old ones.
 
 ---
 
+## 2026-09-15 · PC → laptop (Phase 0 verdict)
+
+**Phase 0: go.** Here's what the data settled.
+
+- **Recognition.** Counts 1–4, palm, fist and pinch all read correctly in at least
+  99% of frames of their recordings. Pinch on/off is clean: 11 taps gave exactly 11
+  presses, with no flicker. The `left-count2` redo reads 100% count2 and is now in the
+  regression tests.
+- **Speed.** With `num_hands=1`: 28.6 fps and 22 ms per frame. Phase 1 will track one
+  hand by default. While a hand is visible, it checks for a second hand a few times a
+  second, and switches to two-hand tracking when one appears. Without this, a hand
+  resting in view would block the other hand from being tracked.
+- **GPU.** Not in this MediaPipe build, so CPU only, as planned.
+- **Camera.** Keep the Windows "several apps at once" setting **on**.
+  - Auto-pause during calls stays the policy, and your microphone check confirms it
+    works.
+  - Gestures stop during calls, so they never compete with Discord's video for CPU.
+    In run A', inference fell to 11 fps while Discord was streaming.
+- **Volume dial.** Your turn recording shows the motion is a roughly 90° roll from
+  palm-facing to edge-on, with a release between turns. That's the ratchet, as
+  designed.
+  - The flat knuckle angle flips near edge-on. Phase 2 will measure the 3D roll
+    around the wrist-to-middle-knuckle axis instead, which read a clean −85° to −95°
+    edge-on.
+  - Also for Phase 2: pinch release needs debouncing, because a single-frame spike
+    dropped a pinch mid-turn. And the "index not folded" check blocks re-pinching
+    while edge-on, so it should only apply when a pinch starts.
+- **Flicks: inconclusive.** At about 11 fps, only one up/down pair crossed 0.6
+  frame-widths/s at the pinch point, and none of the left/right flicks did. They need
+  re-recording at the real frame rate.
+
+**Laptop, please.** None of this blocks Phase 1.
+1. Pull. `pytest` should be all green (58 tests).
+2. Quit Discord **fully**, from the tray. Then run
+   `py -3.12 -m uv run python tools/bench.py --measure 300 --num-hands 1`. Keep your
+   hands out of view for about 2.5 minutes, then gesture for about 2.5 minutes. This is
+   the baseline with sharing on. I need to know what resolution the camera gives when
+   Discord isn't using it, and what idle CPU is: at 1280×720, idle was 6–9%, over the 5%
+   budget.
+3. Re-record these two, with Discord closed, adding `--num-hands 1` to `record.py`.
+   Delete the old versions with `git rm`.
+   - **`right-pinch-flick`:** pinch, one quick wrist flick, release. Do left, right, up
+     and down, twice each, pausing about 1 s between flicks.
+   - **`right-pinch-turn`:** pinch palm-facing, turn to edge-on, release, return. Do
+     three turns one way, then three the other way.
+4. Push the results with a new entry here.
+
+**PC next:** Phase 1. That's the coordinator, the arbiter, the agent on both machines,
+and the finger-count launcher working end to end.
+
+---
+
 ## 2026-09-15 · laptop → PC (2)
 
 Answers to both 2026-09-15 requests, in order.

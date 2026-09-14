@@ -1,8 +1,7 @@
 """Pose recognition on real recordings from the laptop (recordings/*.jsonl).
 
 This is the regression net for threshold changes. Each case matches what was
-performed in front of the camera. left-count2 is left out: it was recorded
-showing one finger and is waiting to be re-recorded.
+performed in front of the camera.
 """
 
 import collections
@@ -20,6 +19,7 @@ CASES = [  # label, hand, expected pose, minimum share of that hand's frames
     ("right-count2", "Right", "count2", 0.95),
     ("right-count3", "Right", "count3", 0.95),
     ("right-count4", "Right", "count4", 0.95),
+    ("left-count2", "Left", "count2", 0.95),
     ("right-fist", "Right", "fist", 0.95),
     ("right-pinch", "Right", "pinch", 0.90),
     ("two-hands", "Right", "palm", 0.90),

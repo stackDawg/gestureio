@@ -526,3 +526,44 @@ gestureio/
 - **Performance:** `tools/bench.py --measure` logs frames per second, inference
   milliseconds and process CPU % over 10 minutes, idle and active, to check against the
   §7 budget.
+
+## 13. Phase 0 results (2026-09-15)
+
+These were measured on the laptop. **Verdict: go.** Where this section disagrees with an
+earlier one, this section wins.
+
+- **Track one hand by default.** With `num_hands=2`, MediaPipe searches for a second
+  hand on every frame, which gives 17–20 fps and 47–52 ms per frame. With
+  `num_hands=1` it's 28.6 fps and 22 ms, camera-to-features takes 31 ms, and CPU is
+  12.7%. So the coordinator:
+  - tracks one hand normally;
+  - while a hand is visible, checks for a second hand about 4 times a second;
+  - switches to two-hand tracking when it finds one, until one hand has been gone for
+    0.5 s.
+
+  This also stops a hand resting in view from blocking the other hand.
+- **No GPU.** The Windows MediaPipe build has GPU processing disabled, so everything
+  runs on the CPU.
+- **Pinch** (replaces the thresholds in §4.1). It uses the image-plane ratio: on below
+  0.30, off above 0.45. The index finger must not be folded when a pinch *starts*.
+  World-landmark depth was too noisy to use.
+- **Thumb:** folded at 0.65 or below, out at 0.75 or above.
+- **Stillness gate:** during every hold, the palm centre must move no faster than
+  0.25 frame-widths per second.
+- **Volume dial** (replaces the "knuckle line" in §2 and G4). The real motion is a
+  roughly 90° roll from palm-facing to edge-on, with a release between turns.
+  - Measure the knuckle line's 3D roll around the wrist-to-middle-MCP axis, from world
+    landmarks. The flat image angle flips near edge-on.
+  - Debounce pinch release, requiring two frames above the off threshold, so
+    single-frame spikes mid-turn don't end the dial.
+- **Flicks:** inconclusive at the recording frame rate of about 11 fps.
+  - Measure the pinch point, not the palm centre, because a wrist flick moves the
+    fingertips most.
+  - Set the thresholds in Phase 2, from re-recordings at the real frame rate.
+- **Camera sharing:**
+  - Windows' "let several apps use this camera" setting removes the
+    first-opener-wins problem, and it stays on.
+  - Auto-pause during calls remains the policy, and it's verified: Discord appears in
+    the microphone list only during a call, and drops out within 5 s of leaving.
+  - With sharing on, the camera may run at 1280×720, which raised idle CPU to 6–9%.
+    A clean baseline is pending.
